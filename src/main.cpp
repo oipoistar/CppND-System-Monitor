@@ -119,7 +119,12 @@ int main(int argc, char *argv[])
     cout << "CPU Usage: " << ProcessParser::getCpuPercent(pid) << "\n";
     cout << "Get UID: " << ProcessParser::getProcUser(pid) << "\n";
     ProcessParser::getPidList();
-    
+    ProcessParser::getSysCpuPercent();
+    cout << "CPU Usage: " << ProcessParser::getSysRamPercent()<< "\n";
+    cout << "Kernel Version: " <<  ProcessParser::getSysKernelVersion()<< "\n";
+    cout << "OS Name: " <<  ProcessParser::getOSName()<< "\n";
+
+
     //Object which contains list of current processes, Container for Process Class
     //ProcessContainer procs;
     // Object which containts relevant methods and attributes regarding system details
