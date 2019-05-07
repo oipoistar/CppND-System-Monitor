@@ -8,6 +8,7 @@ Starter code for System Monitor Project in the C++ OOP course. Most of the code 
 ```
 cd /home/workspace/
 git clone https://github.com/oipoistar/CppND-System-Monitor.git
+cd CppND-System-Monitor
 ```
 2. Install `ncurses` and `boost` package
 ```
