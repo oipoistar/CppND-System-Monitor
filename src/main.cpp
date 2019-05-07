@@ -105,6 +105,7 @@ void printMain(SysInfo sys, ProcessContainer procs)
 
 int main(int argc, char *argv[])
 {
+    /*
     std::string pid;
     if(argc < 2)
     {
@@ -123,13 +124,16 @@ int main(int argc, char *argv[])
     cout << "CPU Usage: " << ProcessParser::getSysRamPercent()<< "\n";
     cout << "Kernel Version: " <<  ProcessParser::getSysKernelVersion()<< "\n";
     cout << "OS Name: " <<  ProcessParser::getOSName()<< "\n";
-
+    cout << "Total Threads: " <<  ProcessParser::getTotalThreads()<< "\n";
+    cout << "Get Total Processes: " <<  ProcessParser::getTotalNumberOfProcesses()<< "\n";
+    cout << "Get Running Processes: " <<  ProcessParser::getNumberOfRunningProcesses()<< "\n";
+    */
 
     //Object which contains list of current processes, Container for Process Class
-    //ProcessContainer procs;
+    ProcessContainer procs;
     // Object which containts relevant methods and attributes regarding system details
-    //SysInfo sys;
+    SysInfo sys;
     //std::string s = writeToConsole(sys);
-    //printMain(sys, procs);
+    printMain(sys, procs);
     return 0;
 }

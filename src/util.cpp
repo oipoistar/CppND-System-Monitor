@@ -64,6 +64,25 @@ std::string Util::PullDataByRegex(std::regex r, std::string file)
     return std::string();
 }
 
+std::string Util::GetValuesFromFile(std::string filename, std::string value, char separator)
+{
+    std::ifstream stream = Util::getStream(filename);
+    std::string line;
+
+    while (getline(stream, line))
+    {
+        if (boost::starts_with(line, value))
+        {
+            std::vector<std::string> results;
+            boost::split(results, line, [separator](char c) { return c == separator; });
+            //expecting name value or name: value
+            return results[1];
+        }
+    }
+
+    return std::string();
+}
+
 ProcessStatusInformation Util::ParseStatusFile(std::string file)
 {
     std::ifstream stream = Util::getStream(file);
@@ -74,38 +93,42 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     if (std::getline(stream, line))
     {
         boost::split(results, line, [](char c) { return c == ' '; });
-        
+
         // comm section contains whitespace so lets join it
-        if(results.size() > 52){
+        if (results.size() > 52)
+        {
             int diff = results.size() - 52;
-            
-            std::vector<std::string>::iterator begin; 
-            std::vector<std::string>::iterator end; 
+
+            std::vector<std::string>::iterator begin;
+            std::vector<std::string>::iterator end;
             begin = results.begin() + 1;
             end = begin + diff;
 
             std::string comm;
-            for(int i = 1; i <= (diff + 1); i++){
+            for (int i = 1; i <= (diff + 1); i++)
+            {
                 comm.append(results[i]);
 
-                if(i < (diff + 1))
+                if (i < (diff + 1))
                     comm.append(" ");
             }
 
             psi.comm = comm;
             results.erase(begin, end + 1);
-        }else{
+        }
+        else
+        {
             psi.comm = results[1];
 
-            std::vector<std::string>::iterator begin;     
+            std::vector<std::string>::iterator begin;
             begin = results.begin() + 1;
 
             results.erase(begin);
         }
-        
+
         int i = 0;
         psi.pid = std::stoi(results[i++]);
-        
+
         psi.state = results[i++].c_str()[0];
 
         psi.ppid = std::stoi(results[i++]);

@@ -46,7 +46,13 @@ std::string ProcessParser::getVmSize(std::string pid)
     std::string filename = Path::basePath() + pid + Path::statusPath();
     //VmData:	   34052 kB
     regex r("VmData:\\s+(\\d+)\\s+");
-    float dataSizeInKB = std::stof(Util::PullDataByRegex(r, filename));
+    std::string data = Util::PullDataByRegex(r, filename);
+
+    if(data.empty()){
+        return data;
+    }
+
+    float dataSizeInKB = std::stof(data);
 
     //Scale to MB
     return std::to_string(dataSizeInKB / float(1024));
@@ -94,21 +100,9 @@ std::string ProcessParser::getProcUpTime(string pid)
 string ProcessParser::getProcUser(string pid)
 {
     std::string filename = Path::basePath() + pid + Path::statusPath();
-    ifstream stream = Util::getStream(filename);
-    std::string line;
-
-    while (std::getline(stream, line))
-    {
-        if (boost::starts_with(line, "Uid:"))
-        {
-            vector<std::string> results;
-            boost::split(results, line, [](char c) { return c == '\t'; });
-
-            int uid = stoi(results[1]);
-            passwd *pwd = getpwuid(uid);
-            return string(pwd->pw_name);
-        }
-    }
+    int uid = stoi(Util::GetValuesFromFile(filename, "Uid:", '\t'));
+    passwd *pwd = getpwuid(uid);
+    return string(pwd->pw_name);
 }
 
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber /*= ""*/)
@@ -127,8 +121,6 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber /*= ""*/)
             line = regex_replace(line, reg, " ");
 
             boost::split(results, line, [](char c) { return c == ' '; });
-
-            results.erase(results.begin());
         }
     }
 
@@ -204,15 +196,28 @@ string ProcessParser::getSysKernelVersion()
 
 int ProcessParser::getTotalThreads()
 {
+    std::vector<std::string> pidList = getPidList();
+    int total_threads = 0;
+    for(auto pid : pidList){
+        
+        std::string filename = Path::basePath() + pid + Path::statusPath();
+        total_threads += stoi(Util::GetValuesFromFile(filename,"Threads:", '\t'));
+
+    }
+
+    return total_threads;
 }
 
 int ProcessParser::getTotalNumberOfProcesses()
 {
-    return getPidList().size();
+    std::string filename = Path::basePath() + Path::statPath();
+    return stoi(Util::GetValuesFromFile(filename, "processes", ' '));
 }
 
 int ProcessParser::getNumberOfRunningProcesses()
 {
+    std::string filename = Path::basePath() + Path::statPath();
+    return stoi(Util::GetValuesFromFile(filename, "procs_running", ' '));
 }
 
 string ProcessParser::getOSName()

@@ -14,5 +14,6 @@ public:
     static std::ifstream getStream(std::string path);
     static std::string PullDataByRegex(std::regex r, std::string file);
     static ProcessStatusInformation ParseStatusFile(std::string file);
+    static std::string GetValuesFromFile(std::string filename, std::string value, char separator);
 };
 
