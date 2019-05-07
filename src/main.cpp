@@ -105,8 +105,18 @@ void printMain(SysInfo sys, ProcessContainer procs)
 
 int main(int argc, char *argv[])
 {
-    cout << "VmWare: " << ProcessParser::getVmSize("5377") << "\n";
-    cout << "CPU Usage: " << ProcessParser::getCpuPercent("5377") << "\n";
+    std::string pid;
+    if(argc < 2)
+    {
+        cout << "Usage: ./SystemMonitor <PID>\n";
+        return 0;
+    }else{
+        cout << "Checking sysinfo for pid:" << pid << "\n";
+        pid = argv[1];
+    }
+
+    cout << "VmWare: " << ProcessParser::getVmSize(pid) << "\n";
+    cout << "CPU Usage: " << ProcessParser::getCpuPercent(pid) << "\n";
 
     //Object which contains list of current processes, Container for Process Class
     //ProcessContainer procs;

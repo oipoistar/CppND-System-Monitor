@@ -74,11 +74,45 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     if (std::getline(stream, line))
     {
         boost::split(results, line, [](char c) { return c == ' '; });
+        
+        if(results.size() > 52){
+            // comm section contains whitespace so lets join it
+            int diff = results.size() - 52;
+            
+            std::vector<std::string>::iterator begin; 
+            std::vector<std::string>::iterator end; 
+            begin = results.begin() + 1;
+            end = begin + diff;
 
+
+            std::string comm;
+            for(int i = 1; i <= (diff + 1); i++){
+                comm.append(results[i]);
+
+                if(i < (diff + 1))
+                    comm.append(" ");
+            }
+
+            psi.comm = comm;
+            results.erase(begin, end + 1);
+            //clear vector of surplus
+
+
+        }else{
+            // Second position is comm
+            psi.comm = results[1];
+
+            std::vector<std::string>::iterator begin;     
+            begin = results.begin() + 1;
+
+            results.erase(begin);
+        }
+        
         int i = 0;
         psi.pid = std::stoi(results[i++]);
-        psi.comm = results[i++];
+        
         psi.state = results[i++].c_str()[0];
+
         psi.ppid = std::stoi(results[i++]);
         psi.pgrp = std::stoi(results[i++]);
         psi.session = std::stoi(results[i++]);

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/SystemMonitor",
-            "args": [],
+            "args": ["1481"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
