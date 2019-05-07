@@ -1,4 +1,7 @@
+#pragma once
+
 #include <string>
+
 using namespace std;
 
 enum CPUStates{
@@ -18,24 +21,24 @@ class Path{
 
 public:
     static string basePath() {
-        return "/proc/";
+        return "/proc/"s;
     }
     static string cmdPath(){
-        return "/cmdline";
+        return "/cmdline"s;
     }
     static string statusPath(){
-        return "/status";
+        return "/status"s;
     }
     static string statPath(){
-        return "stat";
+        return "/stat"s;
     }
     static string upTimePath(){
-        return "uptime";
+        return "uptime"s;
     }
     static string memInfoPath(){
-        return "meminfo";
+        return "meminfo"s;
     }
     static string versionPath(){
-        return "version";
+        return "version"s;
     }
 };

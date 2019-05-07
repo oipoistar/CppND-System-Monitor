@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <iostream>
 #include <vector>
@@ -42,9 +44,15 @@ public:
     std::string getOSName()const;
     std::string getCpuPercent()const;
     void getOtherCores(int _size);
+    int getNumberOfCores();
     void setCpuCoresStats();
     std::vector<std::string> getCoresStats()const;
 };
+
+int SysInfo::getNumberOfCores(){
+
+}
+
 void SysInfo::getOtherCores(int _size){
 //when number of cores is detected, vectors are modified to fit incoming data
         this->coresStats = std::vector<std::string>();

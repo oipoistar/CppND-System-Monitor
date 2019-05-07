@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -17,7 +19,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "constants.h"
-
+#include "util.h"
 
 using namespace std;
 
@@ -27,7 +29,7 @@ private:
     public:
     static string getCmd(string pid);
     static vector<string> getPidList();
-    static std::string getVmSize(string pid);
+    static std::string getVmSize(std::string pid);
     static std::string getCpuPercent(string pid);
     static long int getSysUpTime();
     static std::string getProcUpTime(string pid);

@@ -7,23 +7,16 @@ Starter code for System Monitor Project in the C++ OOP course. Most of the code 
 1. Clone repository into `/home/workspace/`
 ```
 cd /home/workspace/
-git clone https://github.com/udacity/CppND-System-Monitor
+git clone https://github.com/oipoistar/CppND-System-Monitor.git
 ```
-2. Follow along with the lesson and make sure you complete the `ProcessParser` and `Process` classes before attempting to run the project.
-
-3. Install `ncurses` package
+2. Install `ncurses` package
 ```
 sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
-4. Compile and run
+3. Compile and run
 ```
-g++ -std="c++17" main.cpp -lncurses
-./a.out
+mkdir build && cd build
+cmake ..
+make -j32
+./SystemMonitor
 ```
-5. In case of error that looks like the following: 
-```
-root@77e30fca8a01:/home/workspace/CppND-Object-Oriented# ./a.out
-*** %n in writable segment detected ***
-                                      Aborted (core dumped)
-```
-just keep trying `./a.out` and it should work eventually!
