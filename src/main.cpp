@@ -117,7 +117,9 @@ int main(int argc, char *argv[])
 
     cout << "VmWare: " << ProcessParser::getVmSize(pid) << "\n";
     cout << "CPU Usage: " << ProcessParser::getCpuPercent(pid) << "\n";
-
+    cout << "Get UID: " << ProcessParser::getProcUser(pid) << "\n";
+    ProcessParser::getPidList();
+    
     //Object which contains list of current processes, Container for Process Class
     //ProcessContainer procs;
     // Object which containts relevant methods and attributes regarding system details

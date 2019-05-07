@@ -2,6 +2,9 @@
 #include <string>
 #include "stat.h"
 #include <sys/resource.h>
+#include <pwd.h>
+#include <boost/filesystem.hpp>
+#include <regex>
 
 string ProcessParser::getCmd(string pid)
 {
@@ -9,6 +12,27 @@ string ProcessParser::getCmd(string pid)
 
 vector<string> ProcessParser::getPidList()
 {
+    std::string path = Path::basePath();
+    std::vector<std::string> pids;
+
+    pids.reserve(100);
+    
+    regex r("^[0-9]+$");
+    std::smatch m;
+
+    for(auto & p : boost::filesystem::directory_iterator( path )){
+
+        if(boost::filesystem::is_directory(p)){
+            std::string directory_name = p.path().filename().string();
+
+            if (regex_search(directory_name, m, r))
+            {
+                pids.emplace_back(directory_name);
+            }
+        }
+    }
+
+    return pids;
 }
 
 std::string ProcessParser::getVmSize(std::string pid)
@@ -40,6 +64,16 @@ std::string ProcessParser::getCpuPercent(string pid)
 
 long int ProcessParser::getSysUpTime()
 {
+    std::string filename = Path::basePath() + Path::upTimePath();
+    std::ifstream stream = Util::getStream(filename);
+    std::string line;
+
+    if(std::getline(stream, line)){
+        std::vector<std::string> results;
+        boost::split(results, line, [](char c) { return c == ' '; });
+
+        return stoi(results[0]);
+    }
 }
 
 std::string ProcessParser::getProcUpTime(string pid)
@@ -52,6 +86,21 @@ std::string ProcessParser::getProcUpTime(string pid)
 
 string ProcessParser::getProcUser(string pid)
 {
+    std::string filename = Path::basePath() + pid + Path::statusPath();
+    ifstream stream = Util::getStream(filename);
+    std::string line;
+
+    while(std::getline(stream, line)){
+        if(boost::starts_with(line, "Uid:")){
+            vector<std::string> results;
+            boost::split(results, line, [](char c) { return c == '\t'; });
+
+            int uid = stoi(results[1]);
+            passwd* pwd = getpwuid(uid);
+            return string(pwd->pw_name);
+        }
+    }
+
 }
 
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber /*= ""*/)

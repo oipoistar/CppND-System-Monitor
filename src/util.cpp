@@ -75,15 +75,14 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     {
         boost::split(results, line, [](char c) { return c == ' '; });
         
+        // comm section contains whitespace so lets join it
         if(results.size() > 52){
-            // comm section contains whitespace so lets join it
             int diff = results.size() - 52;
             
             std::vector<std::string>::iterator begin; 
             std::vector<std::string>::iterator end; 
             begin = results.begin() + 1;
             end = begin + diff;
-
 
             std::string comm;
             for(int i = 1; i <= (diff + 1); i++){
@@ -95,11 +94,7 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
 
             psi.comm = comm;
             results.erase(begin, end + 1);
-            //clear vector of surplus
-
-
         }else{
-            // Second position is comm
             psi.comm = results[1];
 
             std::vector<std::string>::iterator begin;     
