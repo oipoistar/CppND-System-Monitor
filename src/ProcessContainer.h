@@ -15,19 +15,25 @@ public:
 
 void ProcessContainer::refreshList(){
     std::vector<std::string> pidList = ProcessParser::getPidList();
+    
     this->_list.clear();
-    for(int i=0;i<pidList.size();i++){
-        Process proc(pidList[i]);
-        this->_list.push_back(proc);
+    this->_list.reserve(pidList.size());
+    
+    for( auto pid : pidList){
+        this->_list.emplace_back(pid);
     }
 }
 std::string ProcessContainer::printList(){
     std::string result="";
-    for(int i=0;i<this->_list.size();i++){
-        result += this->_list[i].getProcess();
+    std::stringstream ss;
+
+    for(auto p : _list){
+        ss << p.getProcess();
     }
-    return result;
+
+    return ss.str();
 }
+
 std::vector<std::vector<std::string> > ProcessContainer::getList(){
     std::vector<std::vector<std::string>> values;
     std::vector<std::string> stringifiedList;
@@ -46,5 +52,6 @@ std::vector<std::vector<std::string> > ProcessContainer::getList(){
             values.push_back(sub);
         }
    }
-    return values;
+
+   return values;
 }
