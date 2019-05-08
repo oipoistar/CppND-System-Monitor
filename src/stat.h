@@ -57,6 +57,7 @@ struct ProcessStatusInformation
     u_long env_start;
     u_long env_end;
     int exit_code;
+    float total_time;
 };
 
 

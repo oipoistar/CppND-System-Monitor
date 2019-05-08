@@ -6,6 +6,8 @@
 #include <boost/filesystem.hpp>
 #include <regex>
 
+std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
+
 string ProcessParser::getCmd(string pid)
 {
     string line;
@@ -18,8 +20,8 @@ vector<string> ProcessParser::getPidList()
 {
     std::string path = Path::basePath();
     std::vector<std::string> pids;
-
-    pids.reserve(100);
+    int procnum = getTotalNumberOfProcesses();
+    pids.reserve(procnum);
 
     regex r("^[0-9]+$");
     std::smatch m;
@@ -48,7 +50,8 @@ std::string ProcessParser::getVmSize(std::string pid)
     regex r("VmData:\\s+(\\d+)\\s+");
     std::string data = Util::PullDataByRegex(r, filename);
 
-    if(data.empty()){
+    if (data.empty())
+    {
         return data;
     }
 
@@ -63,15 +66,29 @@ std::string ProcessParser::getCpuPercent(string pid)
     std::string filename = Path::basePath() + pid + Path::statPath();
     ProcessStatusInformation psi = Util::ParseStatusFile(filename);
 
-    float freq = sysconf(_SC_CLK_TCK);
-    float uptime = psi.utime / freq;
+    if (ProcessParser::pid_map.find(pid) == ProcessParser::pid_map.end())
+    {
+        ProcessParser::pid_map.emplace(pid, psi);
+        return "0";
+    }
+    else
+    {
+        float utime_after = psi.utime;
+        float utime_before = ProcessParser::pid_map[pid].utime;
 
-    float total_time = psi.utime + psi.stime + psi.cutime + psi.cstime;
+        float stime_after = psi.stime;
+        float stime_before = ProcessParser::pid_map[pid].stime;
 
-    float seconds = uptime - (psi.starttime / freq);
-    float result = 100.0 * ((total_time / freq) / seconds);
+        float time_total_after = psi.total_time;
+        float time_total_before = ProcessParser::pid_map[pid].total_time;
 
-    return to_string(result);
+        float user_util = 100 * (utime_after - utime_before) / (time_total_after - time_total_before);
+        float sys_util = 100 * (stime_after - stime_before) / (time_total_after - time_total_before);
+
+        ProcessParser::pid_map[pid] = psi;
+        int cpu_num = sysconf(_SC_NPROCESSORS_ONLN);
+        return std::to_string((user_util + sys_util) * cpu_num);
+    }
 }
 
 long int ProcessParser::getSysUpTime()
@@ -171,22 +188,24 @@ float ProcessParser::getSysRamPercent()
         }
     }
 
-    return float(100.0*(1-(free_mem/(total_mem-buffers))));
+    return float(100.0 * (1 - (free_mem / (total_mem - buffers))));
 }
 
 string ProcessParser::getSysKernelVersion()
 {
-    //Linux version 5.0.0-13-generic 
+    //Linux version 5.0.0-13-generic
     std::string filename = Path::basePath() + Path::versionPath();
     ifstream stream = Util::getStream(filename);
 
     std::string line;
 
-    if(getline(stream, line)){
+    if (getline(stream, line))
+    {
         regex r("Linux\\sversion\\s(\\S+)\\s");
         std::smatch m;
 
-        if(regex_search(line, m, r)){
+        if (regex_search(line, m, r))
+        {
             return m.str(1);
         }
     }
@@ -198,11 +217,11 @@ int ProcessParser::getTotalThreads()
 {
     std::vector<std::string> pidList = getPidList();
     int total_threads = 0;
-    for(auto pid : pidList){
-        
-        std::string filename = Path::basePath() + pid + Path::statusPath();
-        total_threads += stoi(Util::GetValuesFromFile(filename,"Threads:", '\t'));
+    for (auto pid : pidList)
+    {
 
+        std::string filename = Path::basePath() + pid + Path::statusPath();
+        total_threads += stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
     }
 
     return total_threads;
@@ -227,14 +246,17 @@ string ProcessParser::getOSName()
 
     std::string line;
 
-    while(getline(stream, line)){
+    while (getline(stream, line))
+    {
 
-        if(boost::starts_with(line, "PRETTY_NAME")){
+        if (boost::starts_with(line, "PRETTY_NAME"))
+        {
             //PRETTY_NAME="Ubuntu 19.04"
             regex r("PRETTY_NAME=\"(.+)\"");
             std::smatch m;
 
-            if(regex_search(line, m, r)){
+            if (regex_search(line, m, r))
+            {
                 return m.str(1);
             }
         }

@@ -30,12 +30,27 @@ public:
     }
     
     string getProcess();
+    float cpuUsage();
 };
 
 string Process::getProcess()
 {
-    if (!ProcessParser::isPidExisting(this->pid))
-        return "";
-        
-    return (this->pid + "   " + this->user + "   "+ this->mem  + "   " + this->cpu  + "   " + this->upTime + "   " + this->cmd);
+    std::string cpu_usage = this->cpu;
+    std::string cmd_formated = this->cmd;
+
+    if(cpu_usage.at(1) == '.'){
+        cpu_usage = cpu_usage.substr(0, 4);
+    }else{
+        cpu_usage = cpu_usage.substr(0, 5);
+    }
+
+    if(cmd_formated.size() > 20){
+        cmd_formated = cmd_formated.substr(0,50) + "...";
+    }
+
+    return (this->pid + " " + this->user + " " + cpu_usage + "% " + this->mem  + " " + this->upTime + " " + cmd_formated);
+}
+
+float Process::cpuUsage(){
+    return stof(this->cpu);
 }

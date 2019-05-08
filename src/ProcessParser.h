@@ -18,15 +18,19 @@
 #include <dirent.h>
 #include <time.h>
 #include <unistd.h>
+#include <map>
 #include "constants.h"
 #include "util.h"
+#include "stat.h"
 
 using namespace std;
 
-class ProcessParser{
+class ProcessParser
+{
 private:
     std::ifstream stream;
-    public:
+public:
+    static std::map<std::string, ProcessStatusInformation> pid_map;
     static string getCmd(string pid);
     static vector<string> getPidList();
     static std::string getVmSize(std::string pid);
@@ -41,7 +45,7 @@ private:
     static int getTotalNumberOfProcesses();
     static int getNumberOfRunningProcesses();
     static string getOSName();
-    static std::string PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2);
+    static std::string PrintCpuStats(std::vector<std::string> values1, std::vector<std::string> values2);
     static bool isPidExisting(string pid);
 };
 

@@ -1,5 +1,6 @@
 #include "util.h"
 #include <iostream>
+#include "ProcessParser.h"
 
 std::string Util::convertToTime(long int input_seconds)
 {
@@ -193,6 +194,16 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
         psi.env_end = std::stoul(results[i++]);
 
         psi.exit_code = std::stoi(results[i++]);
+
+        float total = 0;
+        std::vector<std::string> cpu_list = ProcessParser::getSysCpuPercent();
+        cpu_list.erase(cpu_list.begin());
+
+        for(auto entry : cpu_list){
+            total += stof(entry);
+        }
+
+        psi.total_time = total;
     }
 
     return psi;
