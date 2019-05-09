@@ -7,6 +7,7 @@
 #include <regex>
 
 std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
+std::vector<std::string> ProcessParser::pid_list;
 
 string ProcessParser::getCmd(string pid)
 {
@@ -39,7 +40,8 @@ vector<string> ProcessParser::getPidList()
             }
         }
     }
-
+    
+    pid_list = pids;
     return pids;
 }
 
@@ -86,6 +88,7 @@ std::string ProcessParser::getCpuPercent(string pid)
         float sys_util = 100 * (stime_after - stime_before) / (time_total_after - time_total_before);
 
         ProcessParser::pid_map[pid] = psi;
+
         int cpu_num = sysconf(_SC_NPROCESSORS_ONLN);
         return std::to_string((user_util + sys_util) * cpu_num);
     }
@@ -215,13 +218,18 @@ string ProcessParser::getSysKernelVersion()
 
 int ProcessParser::getTotalThreads()
 {
-    std::vector<std::string> pidList = getPidList();
-    int total_threads = 0;
-    for (auto pid : pidList)
-    {
+    if(pid_list.empty())
+        getPidList();
 
-        std::string filename = Path::basePath() + pid + Path::statusPath();
-        total_threads += stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
+    int total_threads = 0;
+    for (auto pid : pid_list)
+    {
+        try{
+            std::string filename = Path::basePath() + pid + Path::statusPath();
+            total_threads += stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
+        }catch(...){
+            //cout << "Removed PID: " << pid << "\n";
+        }
     }
 
     return total_threads;
@@ -293,8 +301,10 @@ std::string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::
 
 bool ProcessParser::isPidExisting(string pid)
 {
-    std::vector<std::string> vecList = getPidList();
-    if (std::find(vecList.begin(), vecList.end(), pid) != vecList.end())
+    if(pid_list.empty())
+        getPidList();
+    
+    if (std::find(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
     {
         return true;
     }

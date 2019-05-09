@@ -20,7 +20,11 @@ void ProcessContainer::refreshList(){
     this->_list.reserve(pidList.size());
     
     for( auto pid : pidList){
-        this->_list.emplace_back(pid);
+        try{
+            this->_list.emplace_back(pid);
+        }catch(...){
+            //cout << "Removed PID: " << pid;
+        }
     }
 }
 

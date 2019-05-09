@@ -10,6 +10,9 @@
 #include "util.h"
 #include "SysInfo.h"
 #include "ProcessContainer.h"
+#define LOGURU_WITH_STREAMS 1
+#include "loguru.hpp"
+
 
 using namespace std;
 
@@ -78,7 +81,7 @@ void printMain(SysInfo sys, ProcessContainer procs)
 
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    int counter = 0;
+
     while (1)
     {
         box(sys_win, 0, 0);
@@ -95,32 +98,17 @@ void printMain(SysInfo sys, ProcessContainer procs)
     endwin();
 }
 
+
 int main(int argc, char *argv[])
 {
-    /*
-    std::string pid;
-    if(argc < 2)
-    {
-        cout << "Usage: ./SystemMonitor <PID>\n";
-        return 0;
-    }else{
-        cout << "Checking sysinfo for pid:" << pid << "\n";
-        pid = argv[1];
-    }
+    loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
 
-    cout << "VmWare: " << ProcessParser::getVmSize(pid) << "\n";
-    cout << "CPU Usage: " << ProcessParser::getCpuPercent(pid) << "\n";
-    cout << "Get UID: " << ProcessParser::getProcUser(pid) << "\n";
-    ProcessParser::getPidList();
-    ProcessParser::getSysCpuPercent();
-    cout << "CPU Usage: " << ProcessParser::getSysRamPercent()<< "\n";
-    cout << "Kernel Version: " <<  ProcessParser::getSysKernelVersion()<< "\n";
-    cout << "OS Name: " <<  ProcessParser::getOSName()<< "\n";
-    cout << "Total Threads: " <<  ProcessParser::getTotalThreads()<< "\n";
-    cout << "Get Total Processes: " <<  ProcessParser::getTotalNumberOfProcesses()<< "\n";
-    cout << "Get Running Processes: " <<  ProcessParser::getNumberOfRunningProcesses()<< "\n";
-    */
-
+    loguru::init(argc, argv);
+    loguru::add_file("output.log", loguru::Append, loguru::Verbosity_MAX);
+    
+    loguru::set_fatal_handler([](const loguru::Message& message){
+	    throw std::runtime_error(std::string(message.prefix) + message.message);
+    });
     //Object which contains list of current processes, Container for Process Class
     ProcessContainer procs;
     // Object which containts relevant methods and attributes regarding system details

@@ -29,8 +29,11 @@ class ProcessParser
 {
 private:
     std::ifstream stream;
+    
 public:
     static std::map<std::string, ProcessStatusInformation> pid_map;
+    static vector<string> pid_list;
+    
     static string getCmd(string pid);
     static vector<string> getPidList();
     static std::string getVmSize(std::string pid);
