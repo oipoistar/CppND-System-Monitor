@@ -20,6 +20,15 @@ private:
     string upTime;
 
 public:
+    struct FormatedProcess{
+        string pid;
+        string user;
+        string cmd;
+        string cpu;
+        string mem;
+        string upTime;
+    };
+
     Process(string pid)
     {
         this->pid = pid;
@@ -31,11 +40,11 @@ public:
         this->cmd = ProcessParser::getCmd(this->pid);
     }
 
-    string getProcess();
+    FormatedProcess getProcess();
     float cpuUsage();
 };
 
-string Process::getProcess()
+Process::FormatedProcess Process::getProcess()
 {
     std::string pid_display = this->pid;
     std::string user_name = this->user;
@@ -78,8 +87,8 @@ string Process::getProcess()
     if (dec_place != string::npos)
     {
         int diff = 5 - dec_place;
-        for (int i = 0; i <= diff; i++)
-            mem_display = " " + mem_display;
+        //for (int i = 0; i <= diff; i++)
+          //  mem_display = " " + mem_display;
 
         dec_place = mem_display.find('.');
         mem_display = mem_display.substr(0, dec_place + 3);
@@ -87,10 +96,18 @@ string Process::getProcess()
         mem_display = "   00.00";
     }
 
-    std::string display_string = pid_display + " " + user_name + " " + cpu_usage + " " + mem_display + "MB " + this->upTime + " " + cmd_formated;
+    Process::FormatedProcess fp;
+    fp.cmd = cmd_formated;
+    fp.cpu = cpu_usage;
+    fp.mem = mem_display;
+    fp.pid = pid;
+    fp.upTime = this->upTime;
+    fp.user = user_name;
+
+    //std::string display_string = pid_display + " " + user_name + " " + cpu_usage + " " + mem_display + "MB " + this->upTime + " " + cmd_formated;
     //std::cout << display_string << "\n";
-    LOG_S(INFO) << display_string;
-    return display_string;
+    //LOG_S(INFO) << display_string;
+    return fp;
 }
 
 float Process::cpuUsage()

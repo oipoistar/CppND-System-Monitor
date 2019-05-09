@@ -10,7 +10,7 @@ public:
     }
     void refreshList();
     std::string printList();
-    std::vector<std::string> getList();
+    std::vector<Process::FormatedProcess> getList();
 };
 
 void ProcessContainer::refreshList(){
@@ -33,14 +33,15 @@ std::string ProcessContainer::printList(){
     std::stringstream ss;
 
     for(auto p : _list){
-        ss << p.getProcess();
+        ss << p.getProcess().cmd;
     }
 
     return ss.str();
 }
 
-std::vector<std::string> ProcessContainer::getList(){
-    std::vector<std::string> values;
+std::vector<Process::FormatedProcess> ProcessContainer::getList(){
+    std::vector<Process::FormatedProcess> values;
+    values.reserve(25);
 
     std::sort(_list.begin(), _list.end(),
         [](Process a, Process b){return a.cpuUsage() > b.cpuUsage();}

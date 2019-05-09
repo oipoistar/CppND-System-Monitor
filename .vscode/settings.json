@@ -50,6 +50,9 @@
         "list": "cpp",
         "typeindex": "cpp",
         "variant": "cpp",
-        "atomic": "cpp"
+        "atomic": "cpp",
+        "strstream": "cpp",
+        "condition_variable": "cpp",
+        "mutex": "cpp"
     }
 }
