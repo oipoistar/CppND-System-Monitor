@@ -21,7 +21,7 @@
 #include <map>
 #include "constants.h"
 #include "util.h"
-#include "stat.h"
+#include "ProcStat.h"
 
 using namespace std;
 

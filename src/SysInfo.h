@@ -81,10 +81,10 @@ void SysInfo::setLastCpuMeasures(){
 }
 void SysInfo::setCpuCoresStats(){
 // Getting data from files (previous data is required)
-    for(int i=0;i<this->currentCpuCoresStats.size();i++){
+    for(size_t i=0;i<this->currentCpuCoresStats.size();i++){
         this->currentCpuCoresStats[i] = ProcessParser::getSysCpuPercent(to_string(i));
     }
-    for(int i=0;i<this->currentCpuCoresStats.size();i++){
+    for(size_t i=0;i<this->currentCpuCoresStats.size();i++){
     // after acquirement of data we are calculating every core percentage of usage
         this->coresStats[i] = ProcessParser::PrintCpuStats(this->lastCpuCoresStats[i],this->currentCpuCoresStats[i]);
     }
@@ -106,17 +106,23 @@ void SysInfo::setAttributes(){
 // Constructing string for every core data display
 std::vector<std::string> SysInfo::getCoresStats()const{
     std::vector<std::string> result= std::vector<std::string>();
-    for(int i=0;i<this->coresStats.size();i++){
+
+    for(size_t i=0;i<this->coresStats.size();i++){
+        
         std::string temp =("cpu" + to_string(i) +": ");
         float check;
+        
         if(!this->coresStats[i].empty())
             check = stof(this->coresStats[i]);
+        
         if(!check || this->coresStats[i] == "nan"){
             return std::vector<std::string>();
         }
-        temp += Util::getProgressBar(this->coresStats[i]);
+
+        temp += Util::getProgressBar(this->coresStats[i], 30);
         result.push_back(temp);
     }
+
     return result;
 }
 std::string SysInfo::getCpuPercent()const {

@@ -19,7 +19,7 @@ void ProcessContainer::refreshList(){
     this->_list.clear();
     this->_list.reserve(pidList.size());
     
-    for( auto pid : pidList){
+    for( auto &pid : pidList){
         try{
             this->_list.emplace_back(pid);
         }catch(...){
@@ -32,7 +32,7 @@ std::string ProcessContainer::printList(){
     std::string result="";
     std::stringstream ss;
 
-    for(auto p : _list){
+    for(auto &p : _list){
         ss << p.getProcess().cmd;
     }
 
@@ -47,7 +47,7 @@ std::vector<Process::FormatedProcess> ProcessContainer::getList(){
         [](Process a, Process b){return a.cpuUsage() > b.cpuUsage();}
      );
 
-    for(auto entry : _list){
+    for(auto &entry : _list){
         values.push_back(entry.getProcess());
 
         if(values.size() == 24)

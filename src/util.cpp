@@ -1,5 +1,6 @@
 #include "util.h"
 #include <iostream>
+#include <numeric>
 #include "ProcessParser.h"
 
 std::string Util::convertToTime(long int input_seconds)
@@ -15,10 +16,10 @@ std::string Util::convertToTime(long int input_seconds)
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
 // meaning: every 2% is one bar(|)
-std::string Util::getProgressBar(std::string percent)
+std::string Util::getProgressBar(std::string percent, int width)
 {
-    std::string result = "0% ";
-    int _size = 50;
+    std::string result = "0% [";
+    int _size = width;
     int boundaries = (stof(percent) / 100) * _size;
 
     for (int i = 0; i < _size; i++)
@@ -33,7 +34,7 @@ std::string Util::getProgressBar(std::string percent)
         }
     }
 
-    result += " " + percent.substr(0, 5) + " /100%";
+    result += " ] 100%";
     return result;
 }
 
@@ -195,15 +196,12 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
 
         psi.exit_code = std::stoi(results[i++]);
 
-        float total = 0;
         std::vector<std::string> cpu_list = ProcessParser::getSysCpuPercent();
         cpu_list.erase(cpu_list.begin());
 
-        for(auto entry : cpu_list){
-            total += stof(entry);
-        }
-
-        psi.total_time = total;
+        psi.total_time = std::accumulate(cpu_list.begin(), cpu_list.end(),0, [](int t, std::string cpu_str){
+            return t + stof(cpu_str);
+        });
     }
 
     return psi;

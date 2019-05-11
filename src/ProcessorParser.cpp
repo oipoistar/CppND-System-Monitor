@@ -1,9 +1,10 @@
 #include "ProcessParser.h"
 #include <string>
-#include "stat.h"
+#include "ProcStat.h"
 #include <sys/resource.h>
 #include <pwd.h>
 #include <boost/filesystem.hpp>
+#include <numeric>
 #include <regex>
 
 std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
@@ -24,9 +25,6 @@ vector<string> ProcessParser::getPidList()
     int procnum = getTotalNumberOfProcesses();
     pids.reserve(procnum);
 
-    regex r("^[0-9]+$");
-    std::smatch m;
-
     for (auto &p : boost::filesystem::directory_iterator(path))
     {
 
@@ -34,8 +32,8 @@ vector<string> ProcessParser::getPidList()
         {
             std::string directory_name = p.path().filename().string();
 
-            if (regex_search(directory_name, m, r))
-            {
+            if(!directory_name.empty() && std::find_if(directory_name.begin(), directory_name.end(),
+             [](char c) { return !std::isdigit(c); }) == directory_name.end()){
                 pids.emplace_back(directory_name);
             }
         }
@@ -107,6 +105,8 @@ long int ProcessParser::getSysUpTime()
 
         return stoi(results[0]);
     }
+
+    return 0L;
 }
 
 std::string ProcessParser::getProcUpTime(string pid)
@@ -221,18 +221,12 @@ int ProcessParser::getTotalThreads()
     if(pid_list.empty())
         getPidList();
 
-    int total_threads = 0;
-    for (auto pid : pid_list)
-    {
-        try{
+    return std::accumulate(pid_list.begin(), pid_list.end(),0, [](int t, std::string pid){
             std::string filename = Path::basePath() + pid + Path::statusPath();
-            total_threads += stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
-        }catch(...){
-            //cout << "Removed PID: " << pid << "\n";
-        }
-    }
-
-    return total_threads;
+            try{
+                return t + stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
+            }catch(...){return t;}
+        });
 }
 
 int ProcessParser::getTotalNumberOfProcesses()

@@ -20,7 +20,8 @@ private:
     string upTime;
 
 public:
-    struct FormatedProcess{
+    struct FormatedProcess
+    {
         string pid;
         string user;
         string cmd;
@@ -33,7 +34,6 @@ public:
     {
         this->pid = pid;
         this->user = ProcessParser::getProcUser(pid);
-        //TODOs:
         this->mem = ProcessParser::getVmSize(this->pid);
         this->upTime = ProcessParser::getProcUpTime(this->pid);
         this->cpu = ProcessParser::getCpuPercent(this->pid);
@@ -66,13 +66,20 @@ Process::FormatedProcess Process::getProcess()
             user_name += " ";
     }
 
-    if (cpu_usage.at(1) == '.')
+    if (cpu_usage.find('.', 0) != std::string::npos)
     {
-        cpu_usage = " " + cpu_usage.substr(0, 4);
-    }
-    else
-    {
-        cpu_usage = cpu_usage.substr(0, 5);
+        if (cpu_usage.at(1) == '.')
+        {
+            cpu_usage = " " + cpu_usage.substr(0, 4);
+        }
+        else
+        {
+            cpu_usage = cpu_usage.substr(0, 5);
+        }
+
+        
+    }else{
+        cpu_usage = "00.00";
     }
 
     cpu_usage = cpu_usage + "%";
@@ -83,30 +90,28 @@ Process::FormatedProcess Process::getProcess()
     }
 
     // 1234.123123 213.323123 23.23123
-    int dec_place = mem_display.find('.');
-    if (dec_place != string::npos)
+    if (!mem_display.empty())
     {
-        int diff = 5 - dec_place;
-        //for (int i = 0; i <= diff; i++)
-          //  mem_display = " " + mem_display;
-
-        dec_place = mem_display.find('.');
-        mem_display = mem_display.substr(0, dec_place + 3);
-    }else{
-        mem_display = "   00.00";
+        std::stringstream ss;
+        ss << std::setprecision(4) << stof(mem_display);
+        mem_display = ss.str() + "MB";
     }
+    else
+    {
+        mem_display = "N/A";
+    }
+
+    std::stringstream upss;
+    upss << std::setprecision(2) << this->upTime;
 
     Process::FormatedProcess fp;
     fp.cmd = cmd_formated;
     fp.cpu = cpu_usage;
     fp.mem = mem_display;
     fp.pid = pid;
-    fp.upTime = this->upTime;
+    fp.upTime = upss.str();
     fp.user = user_name;
 
-    //std::string display_string = pid_display + " " + user_name + " " + cpu_usage + " " + mem_display + "MB " + this->upTime + " " + cmd_formated;
-    //std::cout << display_string << "\n";
-    //LOG_S(INFO) << display_string;
     return fp;
 }
 
