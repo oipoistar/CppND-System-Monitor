@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+
 #include "ProcessParser.h"
 #include "CpuStats.h"
 
@@ -40,7 +42,7 @@ public:
     std::string getKernelVersion() const;
     std::string getOSName() const;
     std::string getCpuPercent() ;
-    std::vector<std::string> getCoresStats() ;
+    std::vector<std::string> getCoresStats(int rows, int width) ;
 };
 
 
@@ -88,6 +90,18 @@ std::string SysInfo::getCpuPercent(){
     return std::to_string(this->cpu_stat.getTotalCpuUsage());
 }
 
-std::vector<std::string> SysInfo::getCoresStats(){
-    return std::vector<std::string>();
+std::vector<std::string> SysInfo::getCoresStats(int rows, int width){
+    auto umap = cpu_stat.GetSortedCores();
+    std::vector<std::string> results;
+
+    for(auto& [key,value]: umap){
+        auto tmpstr = Util::getProgressBarShortened(std::to_string(key), std::to_string(value), (width / 2) - 6);
+
+        results.push_back(tmpstr);
+
+        if(results.size() == (rows * 2)){
+            break;
+        }   
+    }
+    return results;
 }

@@ -4,6 +4,10 @@
 #include <vector>
 #include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <map>
+#include <unordered_map>
+#include <utility> 
 
 #include "constants.h"
 #include "util.h"
@@ -41,7 +45,7 @@ class CpuStat{
         float getPercentageForCore(int core);
         float getTotalCpuUsage();
         void refreshReading();
-
+        std::unordered_map<int, float> GetSortedCores();
         CpuStat(): lastParsed(), current() {}
 };
 
@@ -159,4 +163,35 @@ int CpuStat::getNumberOfCores()
     }
 
     return 0;
+}
+
+std::unordered_map<int, float> CpuStat::GetSortedCores(){
+    int num_of_cores = getNumberOfCores();
+    std::unordered_map<int, float> result;
+
+    for(int i = 0; i < num_of_cores; i++){
+        result.insert({i, getPercentageForCore(i)});
+    }
+
+    std::vector<std::pair<int, float>> vec;
+
+    std::copy(result.begin(),
+			result.end(),
+			std::back_inserter<std::vector<std::pair<int,float>>>(vec));
+    
+    std::sort(vec.begin(), vec.end(),
+			[](const std::pair<int, float>& l, const std::pair<int, float>& r) {
+				if (l.second != r.second)
+					return l.second < r.second;
+
+				return l.first < r.first;
+			});
+
+    result.clear();
+
+    for(auto& entry : vec){
+        result.insert({entry.first, entry.second});
+    }
+
+    return result;
 }

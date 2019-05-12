@@ -34,7 +34,32 @@ std::string Util::getProgressBar(std::string percent, int width)
         }
     }
 
-    result += " ] 100%";
+    result += "] 100%";
+    return result;
+}
+
+std::string Util::getProgressBarShortened(std::string id, std::string percent, int width)
+{
+    if(id.size() < 2)
+        id = " " + id;
+
+    std::string result = id + "[";
+    int _size = width;
+    int boundaries = (stof(percent) / 100) * _size;
+
+    for (int i = 0; i < _size; i++)
+    {
+        if (i <= boundaries)
+        {
+            result += "|";
+        }
+        else
+        {
+            result += " ";
+        }
+    }
+
+    result += "]";
     return result;
 }
 

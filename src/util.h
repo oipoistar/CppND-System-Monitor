@@ -15,5 +15,6 @@ public:
     static std::string PullDataByRegex(std::regex r, std::string file);
     static ProcessStatusInformation ParseStatusFile(std::string file);
     static std::string GetValuesFromFile(std::string filename, std::string value, char separator);
+    static std::string getProgressBarShortened(std::string id, std::string percent, int width);
 };
 

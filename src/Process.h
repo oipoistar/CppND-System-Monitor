@@ -104,9 +104,13 @@ Process::FormatedProcess Process::getProcess()
 
 float Process::cpuUsage()
 {
-    if(this->fp.cpu.empty())
-        this->fp.cpu = (ProcessParser::getCpuPercent(this->fp.pid));
-    
-    
-    return stof(this->fp.cpu);
+    try{
+        if(this->fp.cpu.empty())
+            this->fp.cpu = (ProcessParser::getCpuPercent(this->fp.pid));
+        
+        
+        return stof(this->fp.cpu);
+    }catch(...){
+        return 0;
+    }
 }

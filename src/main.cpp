@@ -83,10 +83,18 @@ void writeCPUInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
     mvwprintw(sys_win, 2, 2, getCString(("Most utilized cores:")));
     wattron(sys_win, COLOR_PAIR(1));
     
-    std::vector<std::string> val = sys.getCoresStats();
+    std::vector<std::string> val = sys.getCoresStats(4,width);
+    bool odd = false;
     for (size_t i = 0; i < val.size(); i++)
-    {
-        mvwprintw(sys_win, (3 + i), 2, getCString(val[i]));
+    {   
+        if(odd){
+            mvwprintw(sys_win, (3 + (i / 2)), 2 + (width / 2) - 2 , getCString(val[i]));
+            odd =false;
+        }else{
+            mvwprintw(sys_win, (3 + (i / 2)), 2, getCString(val[i]));
+            odd = true;
+        }
+
     }
     wattroff(sys_win, COLOR_PAIR(1));
 }
