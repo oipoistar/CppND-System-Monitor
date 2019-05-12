@@ -41,7 +41,7 @@ public:
     static long int getSysUpTime();
     static std::string getProcUpTime(string pid);
     static string getProcUser(string pid);
-    static vector<string> getSysCpuPercent(string coreNumber = "");
+    static vector<string> parseProcStatFile(string coreNumber = "");
     static float getSysRamPercent();
     static string getSysKernelVersion();
     static int getTotalThreads();

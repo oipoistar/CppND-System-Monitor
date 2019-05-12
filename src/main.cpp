@@ -11,8 +11,7 @@
 #include "util.h"
 #include "SysInfo.h"
 #include "ProcessContainer.h"
-#define LOGURU_WITH_STREAMS 1
-#include "loguru.hpp"
+
 
 
 using namespace std;
@@ -25,7 +24,7 @@ char *getCString(std::string str)
 }
 
 std::string getFormatedStringBySize(std::string str, int currentPos, int xMax){
-    int available_size = xMax - currentPos - 2;
+    size_t available_size = xMax - currentPos - 2;
 
     if(str.size() > available_size)
         return str.substr(0, available_size);
@@ -46,7 +45,7 @@ void decideColorShemeOnPercentage(const std::string& percentage, WINDOW* win){
 }
 
 
-void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win, int width)
+void writeSysInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
 {
     sys.setAttributes();
 
@@ -74,14 +73,16 @@ void writeSysInfoToConsole(SysInfo sys, WINDOW *sys_win, int width)
     wrefresh(sys_win);
 }
 
-void writeCPUInfoToConsole(SysInfo sys, WINDOW *sys_win)
+void writeCPUInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
 {
     mvwprintw(sys_win, 1, 2, getCString("CPU: "));
-    wattron(sys_win, COLOR_PAIR(1));
-    wprintw(sys_win, getCString(Util::getProgressBar(sys.getCpuPercent(), 30)));
+    std::string cpu_percentage = sys.getCpuPercent();
+    decideColorShemeOnPercentage(cpu_percentage, sys_win);
+    wprintw(sys_win, getCString(Util::getProgressBar(cpu_percentage, (width - std::string("CPU: ").size() - 15))));
     wattroff(sys_win, COLOR_PAIR(1));
-    mvwprintw(sys_win, 2, 2, getCString(("Other cores:")));
+    mvwprintw(sys_win, 2, 2, getCString(("Most utilized cores:")));
     wattron(sys_win, COLOR_PAIR(1));
+    
     std::vector<std::string> val = sys.getCoresStats();
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -90,7 +91,7 @@ void writeCPUInfoToConsole(SysInfo sys, WINDOW *sys_win)
     wattroff(sys_win, COLOR_PAIR(1));
 }
 
-void getProcessListToConsole(std::vector<Process::FormatedProcess> processes, WINDOW *win, size_t max_entries, int maxX)
+void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, WINDOW *win, size_t max_entries, int maxX)
 {
 
     wattron(win, COLOR_PAIR(2));
@@ -102,7 +103,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess> processes, WI
     mvwprintw(win, 1, 50, "CMD:");
 
     wattroff(win, COLOR_PAIR(2));
-    for (size_t i = 0; i < processes.size() && i < max_entries; i++)
+    for (size_t i = 0; i < processes.size(); i++)
     {
         mvwprintw(win, 2 + i, 2, getCString(processes[i].pid));
         mvwprintw(win, 2 + i, 9, getCString(processes[i].user));
@@ -113,7 +114,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess> processes, WI
     }
 }
 
-void printMain(SysInfo sys, ProcessContainer procs)
+[[noreturn]] void printMain(SysInfo& sys, ProcessContainer& procs)
 {
     initscr();     /* Start curses mode 		  */
     noecho();      // not printing input values
@@ -139,9 +140,9 @@ void printMain(SysInfo sys, ProcessContainer procs)
         box(sys_win, 0, 0);
         box(proc_win, 0, 0);
         box(sys_overview, 0, 0);
-        std::vector<Process::FormatedProcess> processes = procs.getList();
+        std::vector<Process::FormatedProcess> processes = procs.getList(max_processes);
         writeSysInfoToConsole(sys, sys_win, half_screen_x);
-        writeCPUInfoToConsole(sys, sys_overview);
+        writeCPUInfoToConsole(sys, sys_overview, half_screen_x);
         getProcessListToConsole(processes, proc_win, max_processes,xMax);
         wrefresh(sys_win);
         wrefresh(proc_win);
@@ -157,15 +158,6 @@ void printMain(SysInfo sys, ProcessContainer procs)
 
 int main(int argc, char *argv[])
 {
-    loguru::g_stderr_verbosity = loguru::Verbosity_OFF;
-
-    loguru::init(argc, argv);
-    loguru::add_file("output.log", loguru::Append, loguru::Verbosity_2);
-    
-    loguru::set_fatal_handler([](const loguru::Message& message){
-	    throw std::runtime_error(std::string(message.prefix) + message.message);
-    });
-
     ProcessContainer procs;
     SysInfo sys;
 

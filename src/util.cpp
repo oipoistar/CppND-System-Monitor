@@ -196,7 +196,7 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
 
         psi.exit_code = std::stoi(results[i++]);
 
-        std::vector<std::string> cpu_list = ProcessParser::getSysCpuPercent();
+        std::vector<std::string> cpu_list = ProcessParser::parseProcStatFile();
         cpu_list.erase(cpu_list.begin());
 
         psi.total_time = std::accumulate(cpu_list.begin(), cpu_list.end(),0, [](int t, std::string cpu_str){

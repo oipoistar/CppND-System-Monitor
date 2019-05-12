@@ -125,7 +125,7 @@ string ProcessParser::getProcUser(string pid)
     return string(pwd->pw_name);
 }
 
-vector<string> ProcessParser::getSysCpuPercent(string coreNumber /*= ""*/)
+vector<string> ProcessParser::parseProcStatFile(string coreNumber /*= ""*/)
 {
     std::string line;
     std::string cpuname = "cpu" + coreNumber + " ";

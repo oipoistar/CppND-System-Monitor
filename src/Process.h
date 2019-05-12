@@ -1,8 +1,4 @@
 #pragma once
-#define LOGURU_WITH_STREAMS 1
-
-#include <string>
-#include "loguru.hpp"
 
 using namespace std;
 /*
@@ -11,13 +7,7 @@ It contains relevant attributes as shown below
 */
 class Process
 {
-private:
-    string pid;
-    string user;
-    string cmd;
-    string cpu;
-    string mem;
-    string upTime;
+
 
 public:
     struct FormatedProcess
@@ -30,27 +20,26 @@ public:
         string upTime;
     };
 
-    Process(string pid)
+    Process(string pid) : fp()
     {
-        this->pid = pid;
-        this->user = ProcessParser::getProcUser(pid);
-        this->mem = ProcessParser::getVmSize(this->pid);
-        this->upTime = ProcessParser::getProcUpTime(this->pid);
-        this->cpu = ProcessParser::getCpuPercent(this->pid);
-        this->cmd = ProcessParser::getCmd(this->pid);
+        this->fp.pid = pid;
     }
 
     FormatedProcess getProcess();
     float cpuUsage();
+
+private:
+    FormatedProcess fp;
+
 };
 
 Process::FormatedProcess Process::getProcess()
 {
-    std::string pid_display = this->pid;
-    std::string user_name = this->user;
-    std::string cpu_usage = this->cpu;
-    std::string cmd_formated = this->cmd;
-    std::string mem_display = this->mem;
+    std::string pid_display = this->fp.pid;
+    std::string user_name = ProcessParser::getProcUser(this->fp.pid);
+    std::string cpu_usage = ProcessParser::getCpuPercent(this->fp.pid);
+    std::string cmd_formated = ProcessParser::getCmd(this->fp.pid);;
+    std::string mem_display = ProcessParser::getVmSize(this->fp.pid);
 
     if (pid_display.size() < 6)
     {
@@ -84,11 +73,6 @@ Process::FormatedProcess Process::getProcess()
 
     cpu_usage = cpu_usage + "%";
 
-    if (cmd_formated.size() > 20)
-    {
-        cmd_formated = cmd_formated.substr(0, 50) + "...";
-    }
-
     // 1234.123123 213.323123 23.23123
     if (!mem_display.empty())
     {
@@ -102,20 +86,27 @@ Process::FormatedProcess Process::getProcess()
     }
 
     std::stringstream upss;
-    upss << std::setprecision(2) << this->upTime;
+    upss << std::setprecision(2) << ProcessParser::getProcUpTime(this->fp.pid);
 
-    Process::FormatedProcess fp;
-    fp.cmd = cmd_formated;
-    fp.cpu = cpu_usage;
-    fp.mem = mem_display;
-    fp.pid = pid;
-    fp.upTime = upss.str();
-    fp.user = user_name;
+    Process::FormatedProcess fp_lp;
+    fp_lp.cmd = cmd_formated;
+    fp_lp.cpu = cpu_usage;
+    fp_lp.mem = mem_display;
 
-    return fp;
+//    if(fp_lp.mem.find("N/A") != std::string::npos && fp_lp.mem.find(""))
+
+    fp_lp.pid = this->fp.pid;
+    fp_lp.upTime = upss.str();
+    fp_lp.user = user_name;
+
+    return fp_lp;
 }
 
 float Process::cpuUsage()
 {
-    return stof(this->cpu);
+    if(this->fp.cpu.empty())
+        this->fp.cpu = (ProcessParser::getCpuPercent(this->fp.pid));
+    
+    
+    return stof(this->fp.cpu);
 }

@@ -10,7 +10,7 @@ public:
     }
     void refreshList();
     std::string printList();
-    std::vector<Process::FormatedProcess> getList();
+    std::vector<Process::FormatedProcess> getList(size_t num_of_processes);
 };
 
 void ProcessContainer::refreshList(){
@@ -39,18 +39,20 @@ std::string ProcessContainer::printList(){
     return ss.str();
 }
 
-std::vector<Process::FormatedProcess> ProcessContainer::getList(){
+std::vector<Process::FormatedProcess> ProcessContainer::getList(size_t num_of_processes){
     std::vector<Process::FormatedProcess> values;
-    values.reserve(25);
+    values.reserve(num_of_processes);
 
     std::sort(_list.begin(), _list.end(),
-        [](Process a, Process b){return a.cpuUsage() > b.cpuUsage();}
+        [](Process a, Process b){
+                return a.cpuUsage() > b.cpuUsage();
+            }
      );
 
     for(auto &entry : _list){
         values.push_back(entry.getProcess());
 
-        if(values.size() == 24)
+        if(values.size() == num_of_processes)
             break;
     }
 

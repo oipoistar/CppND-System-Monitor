@@ -138,3 +138,163 @@ Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
 File verbosity level: 2
 date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
 2019-05-11 18:42:44.995 (   0.033s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-11 18:44:54.131 (   0.029s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-11 18:46:59.315 (   0.028s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-11 18:50:25.619 (   0.029s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-11 18:54:23.115 (   0.030s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:13:07.211 (   0.030s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:14:42.534 (   0.029s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:16:58.701 (   0.030s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:18:06.843 (   0.028s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:38:03.464 (   0.033s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:40:27.520 (   0.030s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:46:38.315 (   0.031s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:47:56.880 (   0.032s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:49:45.438 (   0.028s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:50:34.233 (   0.031s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:53:23.049 (   0.029s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
+
+
+
+
+
+arguments: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor/build/SystemMonitor 1727
+Current dir: /home/dpozega/Desktop/udacity-project/CppND-System-Monitor
+File verbosity level: 2
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2019-05-12 18:55:20.962 (   0.031s) [main thread     ]             loguru.cpp:755   INFO| Logging to 'output.log', mode: 'a', verbosity: 2
