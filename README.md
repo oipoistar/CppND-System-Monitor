@@ -8,9 +8,9 @@ cd /home/workspace/
 git clone https://github.com/oipoistar/CppND-System-Monitor.git
 cd CppND-System-Monitor
 ```
-2. Install `ncurses` and `boost` package
+2. Install `ncurses` package
 ```
-sudo apt-get install libncurses5-dev libncursesw5-dev libboost-all-dev
+sudo apt-get install libncurses5-dev libncursesw5-dev
 ```
 3. Compile and run
 ```

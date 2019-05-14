@@ -16,5 +16,7 @@ public:
     static ProcessStatusInformation ParseStatusFile(std::string file);
     static std::string GetValuesFromFile(std::string filename, std::string value, char separator);
     static std::string getProgressBarShortened(std::string id, std::string percent, int width);
+    static bool startsWith(std::string str, std::string part);
+    static std::vector<std::string> split(std::string to_separate, char separator);
 };
 

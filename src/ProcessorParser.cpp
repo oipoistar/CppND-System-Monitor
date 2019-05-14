@@ -3,9 +3,9 @@
 #include "ProcStat.h"
 #include <sys/resource.h>
 #include <pwd.h>
-#include <boost/filesystem.hpp>
 #include <numeric>
 #include <regex>
+#include <filesystem>
 
 std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
 std::vector<std::string> ProcessParser::pid_list;
@@ -25,10 +25,10 @@ vector<string> ProcessParser::getPidList()
     int procnum = getTotalNumberOfProcesses();
     pids.reserve(procnum);
 
-    for (auto &p : boost::filesystem::directory_iterator(path))
+    for (auto &p : std::filesystem::directory_iterator(path))
     {
 
-        if (boost::filesystem::is_directory(p))
+        if (std::filesystem::is_directory(p))
         {
             std::string directory_name = p.path().filename().string();
 
@@ -101,9 +101,9 @@ long int ProcessParser::getSysUpTime()
     if (std::getline(stream, line))
     {
         std::vector<std::string> results;
-        boost::split(results, line, [](char c) { return c == ' '; });
+        auto vec = Util::split(line, ' ');
 
-        return stoi(results[0]);
+        return stoi(vec[0]);
     }
 
     return 0L;
@@ -135,12 +135,12 @@ vector<string> ProcessParser::parseProcStatFile(string coreNumber /*= ""*/)
 
     while (std::getline(stream, line))
     {
-        if (boost::starts_with(line, cpuname))
+        if (Util::startsWith(line, cpuname))
         {
             regex reg("\\s\\s");
             line = regex_replace(line, reg, " ");
 
-            boost::split(results, line, [](char c) { return c == ' '; });
+            results = Util::split(line,' ');
         }
     }
 
@@ -166,7 +166,7 @@ float ProcessParser::getSysRamPercent()
 
     while (std::getline(stream, line))
     {
-        if (boost::starts_with(line, MEM_AVAILABLE_STR))
+        if (Util::startsWith(line, MEM_AVAILABLE_STR))
         {
             if (regex_search(line, m, r))
             {
@@ -174,7 +174,7 @@ float ProcessParser::getSysRamPercent()
             }
         }
 
-        if (boost::starts_with(line, MEM_FREE_STR))
+        if (Util::startsWith(line, MEM_FREE_STR))
         {
             if (regex_search(line, m, r))
             {
@@ -182,7 +182,7 @@ float ProcessParser::getSysRamPercent()
             }
         }
 
-        if (boost::starts_with(line, MEM_BUFERS_STR))
+        if (Util::startsWith(line, MEM_BUFERS_STR))
         {
             if (regex_search(line, m, r))
             {
@@ -251,7 +251,7 @@ string ProcessParser::getOSName()
     while (getline(stream, line))
     {
 
-        if (boost::starts_with(line, "PRETTY_NAME"))
+        if (Util::startsWith(line, "PRETTY_NAME"))
         {
             //PRETTY_NAME="Ubuntu 19.04"
             regex r("PRETTY_NAME=\"(.+)\"");

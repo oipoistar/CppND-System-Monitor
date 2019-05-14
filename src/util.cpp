@@ -98,10 +98,10 @@ std::string Util::GetValuesFromFile(std::string filename, std::string value, cha
 
     while (getline(stream, line))
     {
-        if (boost::starts_with(line, value))
+        if (Util::startsWith(line, value))
         {
-            std::vector<std::string> results;
-            boost::split(results, line, [separator](char c) { return c == separator; });
+            
+            auto results = Util::split(line, separator);
             //expecting name value or name: value
             return results[1];
         }
@@ -119,7 +119,7 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
 
     if (std::getline(stream, line))
     {
-        boost::split(results, line, [](char c) { return c == ' '; });
+        results = Util::split(line,' ');
 
         // comm section contains whitespace so lets join it
         if (results.size() > 52)
@@ -230,4 +230,24 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     }
 
     return psi;
+}
+
+static bool startsWith(std::string str, std::string part){
+    if(str.rfind(part, 0) == 0)
+        return true;
+
+    return false;
+}
+
+static std::vector<std::string> split(std::string to_separate, char separator){
+    size_t pos = 0;
+    std::string token;
+    std::string delimiter = std::to_string(separator);
+
+    std::vector<std::string> vec;
+    while ((pos = to_separate.find(delimiter)) != std::string::npos) {
+        token = to_separate.substr(0, pos);
+        vec.emplace_back(token);
+        to_separate.erase(0, pos + delimiter.length());
+    }
 }
