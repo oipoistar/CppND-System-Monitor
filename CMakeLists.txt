@@ -11,11 +11,12 @@ find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
 file(GLOB SOURCES "src/*.cpp")
-set( CMAKE_CXX_FLAGS " -pthread -ldl " )
+set( CMAKE_CXX_FLAGS " -pthread -ldl" )
 
 add_executable(SystemMonitor ${SOURCES})
 target_compile_options(SystemMonitor PRIVATE "-Wall")
 
+target_compile_features(SystemMonitor PRIVATE cxx_std_17)
 
 target_link_libraries(SystemMonitor   
 ${CURSES_LIBRARIES}

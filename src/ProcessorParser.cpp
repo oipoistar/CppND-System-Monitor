@@ -5,6 +5,8 @@
 #include <pwd.h>
 #include <numeric>
 #include <regex>
+#include <fstream>
+#include <iostream>
 #include <filesystem>
 
 std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
@@ -25,7 +27,9 @@ vector<string> ProcessParser::getPidList()
     int procnum = getTotalNumberOfProcesses();
     pids.reserve(procnum);
 
-    for (auto &p : std::filesystem::directory_iterator(path))
+    auto res = std::filesystem::directory_iterator(path);
+
+    for (auto p : res)
     {
 
         if (std::filesystem::is_directory(p))

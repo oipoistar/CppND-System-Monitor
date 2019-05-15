@@ -232,22 +232,28 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     return psi;
 }
 
-static bool startsWith(std::string str, std::string part){
+bool Util::startsWith(std::string& str,const std::string& part){
     if(str.rfind(part, 0) == 0)
         return true;
 
     return false;
 }
 
-static std::vector<std::string> split(std::string to_separate, char separator){
-    size_t pos = 0;
-    std::string token;
-    std::string delimiter = std::to_string(separator);
+std::vector<std::string> Util::split(const std::string& s, char delimiter)
+{
+    std::vector<std::string> result;
 
-    std::vector<std::string> vec;
-    while ((pos = to_separate.find(delimiter)) != std::string::npos) {
-        token = to_separate.substr(0, pos);
-        vec.emplace_back(token);
-        to_separate.erase(0, pos + delimiter.length());
+    std::size_t current = 0;
+    std::size_t p = s.find_first_of(delimiter, 0);
+
+    while (p != std::string::npos)
+    {
+        result.emplace_back(s, current, p - current);
+        current = p + 1;
+        p = s.find_first_of(delimiter, current);
     }
+
+    result.emplace_back(s, current);
+
+    return result;
 }
