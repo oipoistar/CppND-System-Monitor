@@ -4,41 +4,50 @@
 
 using namespace std;
 
-enum CPUStates{
-	S_USER = 1,
-	S_NICE,
-	S_SYSTEM,
-	S_IDLE,
-	S_IOWAIT,
-	S_IRQ,
-	S_SOFTIRQ,
-	S_STEAL,
-	S_GUEST,
-	S_GUEST_NICE
+enum CPUStates
+{
+    S_USER = 1,
+    S_NICE,
+    S_SYSTEM,
+    S_IDLE,
+    S_IOWAIT,
+    S_IRQ,
+    S_SOFTIRQ,
+    S_STEAL,
+    S_GUEST,
+    S_GUEST_NICE
 };
 
-class Path{
+class Path
+{
 
 public:
-    static string basePath() {
+    static string basePath()
+    {
         return "/proc/"s;
     }
-    static string cmdPath(){
+    static string cmdPath()
+    {
         return "/cmdline"s;
     }
-    static string statusPath(){
+    static string statusPath()
+    {
         return "/status"s;
     }
-    static string statPath(){
+    static string statPath()
+    {
         return "/stat"s;
     }
-    static string upTimePath(){
+    static string upTimePath()
+    {
         return "uptime"s;
     }
-    static string memInfoPath(){
+    static string memInfoPath()
+    {
         return "meminfo"s;
     }
-    static string versionPath(){
+    static string versionPath()
+    {
         return "version"s;
     }
 };

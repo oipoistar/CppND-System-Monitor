@@ -10,7 +10,6 @@ std::string Util::convertToTime(long int input_seconds)
     long seconds = int(input_seconds % 60);
     minutes = int(minutes % 60);
 
-    
     std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
     return result;
 }
@@ -41,7 +40,7 @@ std::string Util::getProgressBar(std::string percent, int width)
 }
 
 // http://collectivesolver.com/5738/how-to-format-bytes-to-kilobytes-megabytes-gigabytes-and-terabytes-in-c
-char* Util::FormatBytes(float bytes, char *str)
+char *Util::FormatBytes(float bytes, char *str)
 {
     float tb = 1099511627776;
     float gb = 1073741824;
@@ -57,21 +56,20 @@ char* Util::FormatBytes(float bytes, char *str)
     else if (bytes >= kb && bytes < mb)
         sprintf(str, "%dKB", (int)(bytes / kb));
     else if (bytes < kb)
-        sprintf(str, "%dBytes", bytes);
+        sprintf(str, "%dBytes", (int)bytes);
     else
-        sprintf(str, "%dBytes", bytes);
+        sprintf(str, "%dBytes", (int)bytes);
 
     return str;
 }
 
-
 std::string Util::getProgressBarShortened(std::string id, std::string percent, int width)
 {
-    if(id.size() < 2)
+    if (id.size() < 2)
         id = " " + id;
 
-    std::string core_num =  std::to_string((stoi(id ) + 1));
-    std::string result = std::to_string((stoi(id ) + 1)) + ((core_num.size() == 1) ? " [" : "[");
+    std::string core_num = std::to_string((stoi(id) + 1));
+    std::string result = std::to_string((stoi(id) + 1)) + ((core_num.size() == 1) ? " [" : "[");
     int _size = width;
     int boundaries = (stof(percent) / 100) * _size;
 
@@ -128,7 +126,7 @@ std::string Util::GetValuesFromFile(std::string filename, std::string value, cha
     {
         if (Util::startsWith(line, value))
         {
-            
+
             auto results = Util::split(line, separator);
             //expecting name value or name: value
             return results[1];
@@ -147,7 +145,7 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
 
     if (std::getline(stream, line))
     {
-        results = Util::split(line,' ');
+        results = Util::split(line, ' ');
 
         // comm section contains whitespace so lets join it
         if (results.size() > 52)
@@ -252,7 +250,7 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
         std::vector<std::string> cpu_list = ProcessParser::parseProcStatFile();
         cpu_list.erase(cpu_list.begin());
 
-        psi.total_time = std::accumulate(cpu_list.begin(), cpu_list.end(),0, [](int t, std::string cpu_str){
+        psi.total_time = std::accumulate(cpu_list.begin(), cpu_list.end(), 0, [](int t, std::string cpu_str) {
             return t + stof(cpu_str);
         });
     }
@@ -260,14 +258,15 @@ ProcessStatusInformation Util::ParseStatusFile(std::string file)
     return psi;
 }
 
-bool Util::startsWith(std::string& str,const std::string& part){
-    if(str.rfind(part, 0) == 0)
+bool Util::startsWith(std::string &str, const std::string &part)
+{
+    if (str.rfind(part, 0) == 0)
         return true;
 
     return false;
 }
 
-std::vector<std::string> Util::split(const std::string& s, char delimiter)
+std::vector<std::string> Util::split(const std::string &s, char delimiter)
 {
     std::vector<std::string> result;
 
@@ -286,10 +285,11 @@ std::vector<std::string> Util::split(const std::string& s, char delimiter)
     return result;
 }
 
-bool Util::isAllDigit(std::string& checkifdigit){
-    for(auto c : checkifdigit)
-        if(!std::isdigit(c))
+bool Util::isAllDigit(std::string &checkifdigit)
+{
+    for (auto c : checkifdigit)
+        if (!std::isdigit(c))
             return false;
-    
+
     return true;
 }

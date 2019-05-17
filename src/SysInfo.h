@@ -30,14 +30,15 @@ public:
     */
         this->setAttributes();
         this->OSname = ProcessParser::getOSName();
-        this->kernelVer = ProcessParser::getSysKernelVersion();  
+        this->kernelVer = ProcessParser::getSysKernelVersion();
     }
 
-    struct CoreStat{
+    struct CoreStat
+    {
         std::string formated_string;
         float core_cpu_percentage;
     };
-    
+
     void setAttributes();
     std::string getMemPercent() const;
     long getUpTime() const;
@@ -46,10 +47,9 @@ public:
     std::string getRunningProc() const;
     std::string getKernelVersion() const;
     std::string getOSName() const;
-    std::string getCpuPercent() ;
-    std::vector<SysInfo::CoreStat> getCoresStats(int rows, int width) ;
+    std::string getCpuPercent();
+    std::vector<SysInfo::CoreStat> getCoresStats(int rows, int width);
 };
-
 
 void SysInfo::setAttributes()
 {
@@ -91,24 +91,28 @@ std::string SysInfo::getOSName() const
     return this->OSname;
 }
 
-std::string SysInfo::getCpuPercent(){
+std::string SysInfo::getCpuPercent()
+{
     return std::to_string(this->cpu_stat.getTotalCpuUsage());
 }
 
-std::vector<SysInfo::CoreStat> SysInfo::getCoresStats(int rows, int width){
+std::vector<SysInfo::CoreStat> SysInfo::getCoresStats(int rows, int width)
+{
     auto umap = cpu_stat.GetSortedCores();
     std::vector<CoreStat> results;
 
-    for(auto& [key,value]: umap){
+    for (auto &[key, value] : umap)
+    {
         auto tmpstr = Util::getProgressBarShortened(std::to_string(key), std::to_string(value), (width / 2) - 6);
         CoreStat stat;
         stat.formated_string = tmpstr;
         stat.core_cpu_percentage = value;
         results.push_back(stat);
 
-        if(results.size() == (rows * 2)){
+        if (results.size() == (rows * 2))
+        {
             break;
-        }   
+        }
     }
 
     return results;

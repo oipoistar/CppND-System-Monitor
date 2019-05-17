@@ -12,8 +12,6 @@
 #include "SysInfo.h"
 #include "ProcessContainer.h"
 
-
-
 using namespace std;
 
 char *getCString(std::string str)
@@ -23,29 +21,35 @@ char *getCString(std::string str)
     return cstr;
 }
 
-std::string getFormatedStringBySize(std::string str, int currentPos, int xMax){
+std::string getFormatedStringBySize(std::string str, int currentPos, int xMax)
+{
     size_t available_size = xMax - currentPos - 2;
 
-    if(str.size() > available_size)
+    if (str.size() > available_size)
         return str.substr(0, available_size);
 
     return str;
 }
 
-void decideColorShemeOnPercentage(const std::string& percentage, WINDOW* win){
+void decideColorShemeOnPercentage(const std::string &percentage, WINDOW *win)
+{
     float perc = stof(percentage);
 
-    if(perc > 30 && perc < 60){
+    if (perc > 30 && perc < 60)
+    {
         wattron(win, COLOR_PAIR(4));
-    }else if(perc > 59){
+    }
+    else if (perc > 59)
+    {
         wattron(win, COLOR_PAIR(5));
-    }else{
+    }
+    else
+    {
         wattron(win, COLOR_PAIR(3));
     }
 }
 
-
-void writeSysInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
+void writeSysInfoToConsole(SysInfo &sys, WINDOW *sys_win, int width)
 {
     sys.setAttributes();
 
@@ -54,7 +58,7 @@ void writeSysInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
 
     mvwprintw(sys_win, 2, 2, getCString(("Kernel: ")));
     mvwprintw(sys_win, 2, 20, getCString((sys.getKernelVersion())));
-    
+
     mvwprintw(sys_win, 3, 2, getCString(("Total Processes:")));
     mvwprintw(sys_win, 3, 20, getCString((sys.getTotalProc())));
 
@@ -68,12 +72,12 @@ void writeSysInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
 
     mvwprintw(sys_win, 6, 2, getCString(("Memory: ")));
     decideColorShemeOnPercentage(percentage, sys_win);
-    wprintw(sys_win, getCString(Util::getProgressBar(percentage, (width - std::string("Memory: ").size() - 15) )));
-    wattroff(sys_win, COLOR_PAIR(1)); 
+    wprintw(sys_win, getCString(Util::getProgressBar(percentage, (width - std::string("Memory: ").size() - 15))));
+    wattroff(sys_win, COLOR_PAIR(1));
     wrefresh(sys_win);
 }
 
-void writeCPUInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
+void writeCPUInfoToConsole(SysInfo &sys, WINDOW *sys_win, int width)
 {
     mvwprintw(sys_win, 1, 2, getCString("CPU: "));
     std::string cpu_percentage = sys.getCpuPercent();
@@ -82,26 +86,28 @@ void writeCPUInfoToConsole(SysInfo& sys, WINDOW *sys_win, int width)
     wattroff(sys_win, COLOR_PAIR(1));
     mvwprintw(sys_win, 2, 2, getCString(("Most utilized cores:")));
     wattron(sys_win, COLOR_PAIR(1));
-    
-    std::vector<SysInfo::CoreStat> val = sys.getCoresStats(4,width);
+
+    std::vector<SysInfo::CoreStat> val = sys.getCoresStats(4, width);
     bool odd = false;
     for (size_t i = 0; i < val.size(); i++)
-    {   
+    {
         decideColorShemeOnPercentage(std::to_string(val[i].core_cpu_percentage), sys_win);
 
-        if(odd){
-            mvwprintw(sys_win, (3 + (i / 2)), 2 + (width / 2) - 2 , getCString(val[i].formated_string));
-            odd =false;
-        }else{
+        if (odd)
+        {
+            mvwprintw(sys_win, (3 + (i / 2)), 2 + (width / 2) - 2, getCString(val[i].formated_string));
+            odd = false;
+        }
+        else
+        {
             mvwprintw(sys_win, (3 + (i / 2)), 2, getCString(val[i].formated_string));
             odd = true;
         }
-
     }
     wattroff(sys_win, COLOR_PAIR(1));
 }
 
-void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, WINDOW *win, size_t max_entries, int maxX)
+void getProcessListToConsole(std::vector<Process::FormatedProcess> &processes, WINDOW *win, size_t max_entries, int maxX)
 {
 
     wattron(win, COLOR_PAIR(2));
@@ -118,14 +124,13 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
         mvwprintw(win, 2 + i, 2, getCString(processes[i].pid));
         mvwprintw(win, 2 + i, 9, getCString(processes[i].user));
         mvwprintw(win, 2 + i, 20, getCString(processes[i].cpu));
-         mvwprintw(win, 2 + i, 30, getCString(processes[i].mem));
+        mvwprintw(win, 2 + i, 30, getCString(processes[i].mem));
         mvwprintw(win, 2 + i, 40, getCString(processes[i].upTime));
         mvwprintw(win, 2 + i, 50, getCString(getFormatedStringBySize(processes[i].cmd, 50, maxX)));
     }
 }
 
-[[noreturn]] void printMain(SysInfo& sys, ProcessContainer& procs)
-{
+[[noreturn]] void printMain(SysInfo &sys, ProcessContainer &procs) {
     initscr();     /* Start curses mode 		  */
     noecho();      // not printing input values
     cbreak();      // Terminating on classic ctrl + c
@@ -136,7 +141,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
     WINDOW *sys_win = newwin(8, half_screen_x, 0, 0);
     WINDOW *sys_overview = newwin(8, half_screen_x, 0, ((int)xMax / 2));
     WINDOW *proc_win = newwin(yMax - 8, xMax - 1, 8, 0);
-    
+
     size_t max_processes = yMax - 11;
 
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
@@ -147,7 +152,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
 
     while (1)
     {
-        
+
         box(sys_win, 0, 0);
         box(proc_win, 0, 0);
         box(sys_overview, 0, 0);
@@ -163,7 +168,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
         wrefresh(proc_win);
 
         werase(proc_win);
-        getProcessListToConsole(processes, proc_win, max_processes,xMax);
+        getProcessListToConsole(processes, proc_win, max_processes, xMax);
         wrefresh(sys_overview);
 
         refresh();
@@ -173,7 +178,6 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
 
     endwin();
 }
-
 
 int main(int argc, char *argv[])
 {

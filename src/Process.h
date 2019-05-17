@@ -40,15 +40,15 @@ public:
         this->fp.user = user_name;
     }
 
-    Process(const Process &p2) {
-            fp.pid = p2.fp.pid;
-            fp.user = p2.fp.user;
-            fp.cmd = p2.fp.cmd;
-            fp.cpu = p2.fp.cpu;
-            fp.mem = p2.fp.mem;
-            fp.upTime = p2.fp.upTime;
-            
-        } 
+    Process(const Process &p2)
+    {
+        fp.pid = p2.fp.pid;
+        fp.user = p2.fp.user;
+        fp.cmd = p2.fp.cmd;
+        fp.cpu = p2.fp.cpu;
+        fp.mem = p2.fp.mem;
+        fp.upTime = p2.fp.upTime;
+    }
 
     int cpuUsage();
     FormatedProcess fp;
