@@ -33,7 +33,7 @@ std::string ProcessContainer::printList(){
     std::stringstream ss;
 
     for(auto &p : _list){
-        ss << p.getProcess().cmd;
+        ss << p.fp.cmd;
     }
 
     return ss.str();
@@ -50,10 +50,12 @@ std::vector<Process::FormatedProcess> ProcessContainer::getList(size_t num_of_pr
      );
 
     for(auto &entry : _list){
-        values.push_back(entry.getProcess());
+        try{
+            values.push_back(entry.fp);
 
-        if(values.size() == num_of_processes)
-            break;
+            if(values.size() == num_of_processes)
+                break;
+        }catch(...){}
     }
 
    return values;

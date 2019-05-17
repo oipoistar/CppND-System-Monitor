@@ -40,12 +40,38 @@ std::string Util::getProgressBar(std::string percent, int width)
     return result;
 }
 
+// http://collectivesolver.com/5738/how-to-format-bytes-to-kilobytes-megabytes-gigabytes-and-terabytes-in-c
+char* Util::FormatBytes(float bytes, char *str)
+{
+    float tb = 1099511627776;
+    float gb = 1073741824;
+    float mb = 1048576;
+    float kb = 1024;
+
+    if (bytes >= tb)
+        sprintf(str, "%dTB", (int)(bytes / tb));
+    else if (bytes >= gb && bytes < tb)
+        sprintf(str, "%dGB", (int)(bytes / gb));
+    else if (bytes >= mb && bytes < gb)
+        sprintf(str, "%dMB", (int)(bytes / mb));
+    else if (bytes >= kb && bytes < mb)
+        sprintf(str, "%dKB", (int)(bytes / kb));
+    else if (bytes < kb)
+        sprintf(str, "%dBytes", bytes);
+    else
+        sprintf(str, "%dBytes", bytes);
+
+    return str;
+}
+
+
 std::string Util::getProgressBarShortened(std::string id, std::string percent, int width)
 {
     if(id.size() < 2)
         id = " " + id;
 
-    std::string result = id + "[";
+    std::string core_num =  std::to_string((stoi(id ) + 1));
+    std::string result = std::to_string((stoi(id ) + 1)) + ((core_num.size() == 1) ? " [" : "[");
     int _size = width;
     int boundaries = (stof(percent) / 100) * _size;
 

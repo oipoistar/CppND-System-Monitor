@@ -19,5 +19,6 @@ public:
     static bool startsWith(std::string& str,const std::string& part);
     static std::vector<std::string> split(const std::string& to_separate, char separator);
     static bool isAllDigit(std::string& checkifdigit);
+    static char* FormatBytes(float bytes, char *str);
 };
 

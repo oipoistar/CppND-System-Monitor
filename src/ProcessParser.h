@@ -36,8 +36,8 @@ public:
     
     static string getCmd(string pid);
     static vector<string> getPidList();
-    static std::string getVmSize(std::string pid);
-    static std::string getCpuPercent(string pid);
+    static float getVmSize(std::string pid);
+    static int getCpuPercent(string pid);
     static long int getSysUpTime();
     static long int getProcUpTime(string pid);
     static string getProcUser(string pid);

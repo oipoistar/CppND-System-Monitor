@@ -118,7 +118,7 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
         mvwprintw(win, 2 + i, 2, getCString(processes[i].pid));
         mvwprintw(win, 2 + i, 9, getCString(processes[i].user));
         mvwprintw(win, 2 + i, 20, getCString(processes[i].cpu));
-        mvwprintw(win, 2 + i, 30, getCString(processes[i].mem));
+         mvwprintw(win, 2 + i, 30, getCString(processes[i].mem));
         mvwprintw(win, 2 + i, 40, getCString(processes[i].upTime));
         mvwprintw(win, 2 + i, 50, getCString(getFormatedStringBySize(processes[i].cmd, 50, maxX)));
     }
@@ -147,19 +147,28 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess>& processes, W
 
     while (1)
     {
+        
         box(sys_win, 0, 0);
         box(proc_win, 0, 0);
         box(sys_overview, 0, 0);
+
         std::vector<Process::FormatedProcess> processes = procs.getList(max_processes);
+
+        werase(sys_win);
         writeSysInfoToConsole(sys, sys_win, half_screen_x);
-        writeCPUInfoToConsole(sys, sys_overview, half_screen_x);
-        getProcessListToConsole(processes, proc_win, max_processes,xMax);
         wrefresh(sys_win);
+
+        werase(sys_overview);
+        writeCPUInfoToConsole(sys, sys_overview, half_screen_x);
         wrefresh(proc_win);
+
+        werase(proc_win);
+        getProcessListToConsole(processes, proc_win, max_processes,xMax);
         wrefresh(sys_overview);
+
         refresh();
-        sleep(1);
         procs.refreshList();
+        sleep(1);
     }
 
     endwin();

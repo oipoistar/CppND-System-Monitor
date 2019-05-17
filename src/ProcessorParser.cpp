@@ -55,7 +55,7 @@ vector<string> ProcessParser::getPidList()
     return pids;
 }
 
-std::string ProcessParser::getVmSize(std::string pid)
+float ProcessParser::getVmSize(std::string pid)
 {
     std::string filename = Path::basePath() + pid + Path::statusPath();
     //VmData:	   34052 kB
@@ -64,16 +64,16 @@ std::string ProcessParser::getVmSize(std::string pid)
 
     if (data.empty())
     {
-        return data;
+        return 0;
     }
 
     float dataSizeInKB = std::stof(data);
 
-    //Scale to MB
-    return std::to_string(dataSizeInKB / float(1024));
+    //Scale to bytes
+    return dataSizeInKB * 1024;
 }
 
-std::string ProcessParser::getCpuPercent(string pid)
+int ProcessParser::getCpuPercent(string pid)
 {
     std::string filename = Path::basePath() + pid + Path::statPath();
     ProcessStatusInformation psi = Util::ParseStatusFile(filename);
@@ -81,7 +81,7 @@ std::string ProcessParser::getCpuPercent(string pid)
     if (ProcessParser::pid_map.find(pid) == ProcessParser::pid_map.end())
     {
         ProcessParser::pid_map.emplace(pid, psi);
-        return "0";
+        return 0;
     }
     else
     {
@@ -100,7 +100,7 @@ std::string ProcessParser::getCpuPercent(string pid)
         ProcessParser::pid_map[pid] = psi;
 
         int cpu_num = sysconf(_SC_NPROCESSORS_ONLN);
-        return std::to_string((user_util + sys_util) * cpu_num);
+        return ((user_util + sys_util) * cpu_num);
     }
 }
 
