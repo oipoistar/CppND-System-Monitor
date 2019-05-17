@@ -18,5 +18,6 @@ public:
     static std::string getProgressBarShortened(std::string id, std::string percent, int width);
     static bool startsWith(std::string& str,const std::string& part);
     static std::vector<std::string> split(const std::string& to_separate, char separator);
+    static bool isAllDigit(std::string& checkifdigit);
 };
 

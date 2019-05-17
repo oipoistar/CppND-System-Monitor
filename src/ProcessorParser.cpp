@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <sys/time.h>
 
 std::map<std::string, ProcessStatusInformation> ProcessParser::pid_map;
 std::vector<std::string> ProcessParser::pid_list;
@@ -22,27 +23,34 @@ string ProcessParser::getCmd(string pid)
 
 vector<string> ProcessParser::getPidList()
 {
-    std::string path = Path::basePath();
+    std::filesystem::path pth = Path::basePath();
     std::vector<std::string> pids;
     int procnum = getTotalNumberOfProcesses();
     pids.reserve(procnum);
 
-    auto res = std::filesystem::directory_iterator(path);
-
-    for (auto p : res)
+    try
     {
+        std::filesystem::directory_iterator res = std::filesystem::directory_iterator(pth);
 
-        if (std::filesystem::is_directory(p))
+        for (auto &p : res)
         {
-            std::string directory_name = p.path().filename().string();
 
-            if(!directory_name.empty() && std::find_if(directory_name.begin(), directory_name.end(),
-             [](char c) { return !std::isdigit(c); }) == directory_name.end()){
-                pids.emplace_back(directory_name);
+            if (std::filesystem::is_directory(p))
+            {
+                std::string directory_name = p.path().filename().string();
+
+                if (!directory_name.empty() && Util::isAllDigit(directory_name))
+                {
+                    pids.emplace_back(directory_name);
+                }
             }
         }
     }
-    
+    catch (const std::exception &ex)
+    {
+        cout << ex.what() << "\n";
+    }
+
     pid_list = pids;
     return pids;
 }
@@ -113,12 +121,19 @@ long int ProcessParser::getSysUpTime()
     return 0L;
 }
 
-std::string ProcessParser::getProcUpTime(string pid)
+long int ProcessParser::getProcUpTime(string pid)
 {
     std::string filename = Path::basePath() + pid + Path::statPath();
     ProcessStatusInformation psi = Util::ParseStatusFile(filename);
 
-    return to_string(float(psi.utime / sysconf(_SC_CLK_TCK)));
+    timeval current_time;
+    gettimeofday(&current_time, NULL);
+    long int boot_time = getSysUpTime();
+    long int process_start_time = (psi.starttime / sysconf(_SC_CLK_TCK));
+
+    long int process_time = current_time.tv_sec - (current_time.tv_sec - (boot_time - process_start_time));
+
+    return process_time;
 }
 
 string ProcessParser::getProcUser(string pid)
@@ -144,7 +159,7 @@ vector<string> ProcessParser::parseProcStatFile(string coreNumber /*= ""*/)
             regex reg("\\s\\s");
             line = regex_replace(line, reg, " ");
 
-            results = Util::split(line,' ');
+            results = Util::split(line, ' ');
         }
     }
 
@@ -222,15 +237,20 @@ string ProcessParser::getSysKernelVersion()
 
 int ProcessParser::getTotalThreads()
 {
-    if(pid_list.empty())
+    if (pid_list.empty())
         getPidList();
 
-    return std::accumulate(pid_list.begin(), pid_list.end(),0, [](int t, std::string pid){
-            std::string filename = Path::basePath() + pid + Path::statusPath();
-            try{
-                return t + stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
-            }catch(...){return t;}
-        });
+    return std::accumulate(pid_list.begin(), pid_list.end(), 0, [](int t, std::string pid) {
+        std::string filename = Path::basePath() + pid + Path::statusPath();
+        try
+        {
+            return t + stoi(Util::GetValuesFromFile(filename, "Threads:", '\t'));
+        }
+        catch (...)
+        {
+            return t;
+        }
+    });
 }
 
 int ProcessParser::getTotalNumberOfProcesses()
@@ -299,9 +319,9 @@ std::string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::
 
 bool ProcessParser::isPidExisting(string pid)
 {
-    if(pid_list.empty())
+    if (pid_list.empty())
         getPidList();
-    
+
     if (std::find(pid_list.begin(), pid_list.end(), pid) != pid_list.end())
     {
         return true;

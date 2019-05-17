@@ -39,7 +39,7 @@ public:
     static std::string getVmSize(std::string pid);
     static std::string getCpuPercent(string pid);
     static long int getSysUpTime();
-    static std::string getProcUpTime(string pid);
+    static long int getProcUpTime(string pid);
     static string getProcUser(string pid);
     static vector<string> parseProcStatFile(string coreNumber = "");
     static float getSysRamPercent();

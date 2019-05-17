@@ -9,6 +9,8 @@ std::string Util::convertToTime(long int input_seconds)
     long hours = minutes / 60;
     long seconds = int(input_seconds % 60);
     minutes = int(minutes % 60);
+
+    
     std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
     return result;
 }
@@ -256,4 +258,12 @@ std::vector<std::string> Util::split(const std::string& s, char delimiter)
     result.emplace_back(s, current);
 
     return result;
+}
+
+bool Util::isAllDigit(std::string& checkifdigit){
+    for(auto c : checkifdigit)
+        if(!std::isdigit(c))
+            return false;
+    
+    return true;
 }

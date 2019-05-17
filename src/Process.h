@@ -93,10 +93,9 @@ Process::FormatedProcess Process::getProcess()
     fp_lp.cpu = cpu_usage;
     fp_lp.mem = mem_display;
 
-//    if(fp_lp.mem.find("N/A") != std::string::npos && fp_lp.mem.find(""))
 
     fp_lp.pid = this->fp.pid;
-    fp_lp.upTime = upss.str();
+    fp_lp.upTime = Util::convertToTime(ProcessParser::getProcUpTime(this->fp.pid));
     fp_lp.user = user_name;
 
     return fp_lp;
