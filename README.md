@@ -20,4 +20,4 @@ make -j32
 ./SystemMonitor
 ```
 
-I suggest building it with g++ 9.1. Earlier g++ versions have c++17 support only experiemntaly implemented and the std::filesystem had a lot of bugs.
+I suggest building it with g++ 9.1. Earlier g++ versions have c++17 support but it's was marked as experimental. Also std::filesystem had a lot of bugs.
