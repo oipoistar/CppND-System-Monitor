@@ -58,6 +58,3 @@ struct ProcessStatusInformation
     int exit_code;
     float total_time;
 };
-
-
-

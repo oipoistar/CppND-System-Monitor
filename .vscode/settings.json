@@ -54,7 +54,13 @@
         "strstream": "cpp",
         "condition_variable": "cpp",
         "mutex": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "bit": "cpp",
+        "map": "cpp",
+        "memory_resource": "cpp",
+        "regex": "cpp",
+        "shared_mutex": "cpp",
+        "string": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
     "editor.defaultFormatter": "ms-vscode.cpptools",

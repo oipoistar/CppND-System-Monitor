@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+#include <thread>
+
 #include "util.h"
 #include "SysInfo.h"
 #include "ProcessContainer.h"
@@ -130,6 +132,11 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess> &processes, W
     }
 }
 
+void RefreshList(ProcessContainer &container)
+{
+    container.refreshList();
+}
+
 [[noreturn]] void printMain(SysInfo &sys, ProcessContainer &procs) {
     initscr();     /* Start curses mode 		  */
     noecho();      // not printing input values
@@ -172,8 +179,10 @@ void getProcessListToConsole(std::vector<Process::FormatedProcess> &processes, W
         wrefresh(sys_overview);
 
         refresh();
-        procs.refreshList();
-        sleep(1);
+        std::thread tr(RefreshList, std::ref(procs));
+        //procs.refreshList();
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        tr.join();
     }
 
     endwin();

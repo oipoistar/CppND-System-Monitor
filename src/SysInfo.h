@@ -28,9 +28,6 @@ public:
     Initial data for individual cores is set
     System data is set
     */
-        this->setAttributes();
-        this->OSname = ProcessParser::getOSName();
-        this->kernelVer = ProcessParser::getSysKernelVersion();
     }
 
     struct CoreStat
@@ -55,6 +52,8 @@ void SysInfo::setAttributes()
 {
     cpu_stat.refreshReading();
     // getting parsed data
+    this->OSname = ProcessParser::getOSName();
+    this->kernelVer = ProcessParser::getSysKernelVersion();
     this->memPercent = ProcessParser::getSysRamPercent();
     this->upTime = ProcessParser::getSysUpTime();
     this->totalProc = ProcessParser::getTotalNumberOfProcesses();

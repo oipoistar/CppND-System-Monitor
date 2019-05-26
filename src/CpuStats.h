@@ -8,6 +8,7 @@
 #include <map>
 #include <unordered_map>
 #include <utility>
+#include <execution>
 
 #include "constants.h"
 #include "util.h"
@@ -200,7 +201,7 @@ std::unordered_map<int, float> CpuStat::GetSortedCores()
               result.end(),
               std::back_inserter<std::vector<std::pair<int, float>>>(vec));
 
-    std::sort(vec.begin(), vec.end(),
+    std::sort(std::execution::unseq, vec.begin(), vec.end(),
               [](const std::pair<int, float> &l, const std::pair<int, float> &r) {
                   if (l.second != r.second)
                       return l.second < r.second;

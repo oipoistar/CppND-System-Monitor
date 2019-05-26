@@ -12,7 +12,7 @@ find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 
 file(GLOB SOURCES "src/*.cpp")
-set( CMAKE_CXX_FLAGS " -pthread -ldl -lstdc++fs" )
+set( CMAKE_CXX_FLAGS " -pthread -ldl -lstdc++fs -fno-omit-frame-pointer" )
 
 add_executable(SystemMonitor ${SOURCES})
 target_compile_options(SystemMonitor PRIVATE "-Wall")

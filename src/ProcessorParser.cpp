@@ -25,8 +25,6 @@ vector<string> ProcessParser::getPidList()
 {
     std::filesystem::path pth = Path::basePath();
     std::vector<std::string> pids;
-    int procnum = getTotalNumberOfProcesses();
-    pids.reserve(procnum);
 
     try
     {
@@ -34,7 +32,6 @@ vector<string> ProcessParser::getPidList()
 
         for (auto &p : res)
         {
-
             if (std::filesystem::is_directory(p))
             {
                 std::string directory_name = p.path().filename().string();
@@ -59,8 +56,22 @@ float ProcessParser::getVmSize(std::string pid)
 {
     std::string filename = Path::basePath() + pid + Path::statusPath();
     //VmData:	   34052 kB
-    regex r("VmData:\\s+(\\d+)\\s+");
-    std::string data = Util::PullDataByRegex(r, filename);
+    //regex r("VmData:\\s+(\\d+)\\s+");
+    std::ifstream infile(filename);
+
+    std::string line;
+    const std::string vmdata_pre = "VmData:";
+    std::string data;
+
+    while (getline(infile, line))
+    {
+        if (Util::startsWith(line, vmdata_pre))
+        {
+            std::vector<std::string> dt = Util::split(line, ' ');
+            data = dt[3];
+        }
+    }
+    //std::string data = Util::PullDataByRegex(r, filename);
 
     if (data.empty())
     {
@@ -144,6 +155,15 @@ string ProcessParser::getProcUser(string pid)
     return string(pwd->pw_name);
 }
 
+bool replace(std::string &str, const std::string &from, const std::string &to)
+{
+    size_t start_pos = str.find(from);
+    if (start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
+
 vector<string> ProcessParser::parseProcStatFile(string coreNumber /*= ""*/)
 {
     std::string line;
@@ -156,9 +176,7 @@ vector<string> ProcessParser::parseProcStatFile(string coreNumber /*= ""*/)
     {
         if (Util::startsWith(line, cpuname))
         {
-            regex reg("\\s\\s");
-            line = regex_replace(line, reg, " ");
-
+            replace(line, "  ", " ");
             results = Util::split(line, ' ');
         }
     }

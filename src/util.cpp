@@ -287,7 +287,7 @@ std::vector<std::string> Util::split(const std::string &s, char delimiter)
 
 bool Util::isAllDigit(std::string &checkifdigit)
 {
-    for (auto c : checkifdigit)
+    for (auto &c : checkifdigit)
         if (!std::isdigit(c))
             return false;
 

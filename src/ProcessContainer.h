@@ -1,15 +1,18 @@
 #include "Process.h"
 #include <vector>
+#include <execution>
+#include <thread>
+
 class ProcessContainer
 {
 
 private:
     std::vector<Process> _list;
+    std::mutex mutex;
 
 public:
     ProcessContainer()
     {
-        this->refreshList();
     }
     void refreshList();
     std::string printList();
@@ -18,6 +21,7 @@ public:
 
 void ProcessContainer::refreshList()
 {
+    mutex.lock();
     std::vector<std::string> pidList = ProcessParser::getPidList();
 
     this->_list.clear();
@@ -34,6 +38,7 @@ void ProcessContainer::refreshList()
             //cout << "Removed PID: " << pid;
         }
     }
+    mutex.unlock();
 }
 
 std::string ProcessContainer::printList()
@@ -51,10 +56,11 @@ std::string ProcessContainer::printList()
 
 std::vector<Process::FormatedProcess> ProcessContainer::getList(size_t num_of_processes)
 {
+    mutex.lock();
     std::vector<Process::FormatedProcess> values;
     values.reserve(num_of_processes);
 
-    std::sort(_list.begin(), _list.end(),
+    std::sort(std::execution::unseq, _list.begin(), _list.end(),
               [](Process a, Process b) {
                   return a.cpuUsage() > b.cpuUsage();
               });
@@ -72,6 +78,6 @@ std::vector<Process::FormatedProcess> ProcessContainer::getList(size_t num_of_pr
         {
         }
     }
-
+    mutex.unlock();
     return values;
 }
